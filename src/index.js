@@ -11,12 +11,19 @@ import logger from './utils/logger'
 import router from './routes'
 import { notFound, errorHandler } from './utils/errors'
 
-const port = Number(process.env.PORT)
+const port = process.env.PORT || 3000; // Use a default port if process.env.PORT is not defined
 
 const app = express()
 
+app.use(
+  basicAuth({
+    users: { [process.env.ADMIN_USER]: process.env.ADMIN_PASSWORD },
+  }),
+)
 
-app.use(morgan(process.env.MORGAN_LOG))
+// Specify a format for Morgan, for example, 'combined'
+app.use(morgan('combined'))
+
 app.use(cors({ origin: process.env.CORS_ORIGIN }))
 app.use(helmet())
 app.use(bodyParser.json())
